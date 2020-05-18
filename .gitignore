@@ -1,2 +1,5 @@
-#env
+#virtual environment
 env
+
+#Visual Studio Code cache
+.vscode/
