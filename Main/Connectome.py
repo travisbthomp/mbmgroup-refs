@@ -18,9 +18,10 @@ class Connectome:
         self.filename = filename
 
         if filename.endswith('.graphml'):
-            self.read_graphml(filename)
-        elif filename.endswith('.csv')
-            self.read_csv(filename)
+            self._read_graphml()
+        elif filename.endswith('.csv'):
+            self._read_csv()
+
 
         self.n_Nodes = 0
         self.id_Nodes = np.zeros((0,2))
@@ -28,7 +29,7 @@ class Connectome:
     def _read_graphml(self):
         #load graphml
         self.__tree = ET.parse(self.filename)
-        self.__root = tree.getroot()
+        self.__root = self.__tree.getroot()
 
     def _read_csv(self):
         pass
