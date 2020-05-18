@@ -11,5 +11,5 @@ class TestConnectome(unittest.TestCase):
     def test_init(self):
 
         assert self.path_to_graph.endswith('.graphml') == True
-        
+
         assert self.path_to_graph == self.graph.filename
