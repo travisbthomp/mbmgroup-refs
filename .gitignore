@@ -3,3 +3,7 @@ env
 
 #Visual Studio Code cache
 .vscode/
+
+#pycache
+Main/__pycache__
+tests/__pycache__
