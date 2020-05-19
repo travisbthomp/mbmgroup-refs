@@ -1,4 +1,5 @@
 import unittest
+import numpy
 import os
 
 from Main.Connectome import Connectome
@@ -27,7 +28,12 @@ class TestConnectome(unittest.TestCase):
     def test_build_graph_graphml(self):
         """testing build_graph function to make the graph from input file
         """
-        pass
+        self.graph.build_graph_graphml()
+
+        assert self.graph.n_Nodes > 0
+        assert self.graph.n_edges > 0
+        assert self.graph.adj_matrix_full.shape == (self.graph.n_Nodes, self.graph.n_Nodes)
+        assert self.graph.coordinates.shape == (self.graph.n_Nodes,3)
 
     def test_read_graphml(self):
         """Test _read_graphml function

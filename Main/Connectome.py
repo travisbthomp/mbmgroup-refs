@@ -52,10 +52,13 @@ class Connectome:
         self.node_id = np.zeros((0, 2))
         self.n_edges = 0
         self.adj_matrix_full = np.zeros((0,0))
+        self.coordinates = None
 
     def build_graph_graphml(self):
         self.get_nodes_graphml()
         self.define_adjacency_matrix_graphml()
+        self.get_mni_node_coordinates()
+
 
     def build_graph_csv(self):
         pass
