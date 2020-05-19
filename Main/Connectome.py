@@ -26,6 +26,13 @@ class Connectome:
 
         if parcellated_image_path == None:
             root_dir = os.path.split(os.path.dirname(__file__))[0]
+            if root_dir.endswith('mbmgroup-refs'):
+                pass
+            elif root_dir.endswith('site-packages'):
+                directory_list = os.path.split(os.path.dirname(__file__))[0].split('/')
+                root_dir = '/'.join(directory_list[:-4])
+            else:
+                pass
             self.parcellated_image_path = root_dir + f'/Data/mni_parcellations/mni_template-L2018_desc-scale{self.scale}_atlas.nii.gz'
         else:
             self.parcellated_image_path = parcellated_image_path
