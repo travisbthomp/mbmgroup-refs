@@ -43,5 +43,6 @@ class TestConnectome(unittest.TestCase):
 
         assert self.graph.n_Nodes > 0
         assert len(self.graph.node_id) > 0
+        assert self.graph.n_Nodes == len(self.graph.node_id)
 
 
