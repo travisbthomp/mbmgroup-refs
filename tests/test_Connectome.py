@@ -18,8 +18,8 @@ class TestConnectome(unittest.TestCase):
         assert self.path_to_graph == self.graph.filename
 
         #test call to _find_tag produces expected result for test graphml
-        assert self.graph.tag_id == self.graph._find_tag()
-        assert self.graph.tag_id == "d6"
+        assert self.graph._region_tag == self.graph._find_tag_graphml()
+        assert self.graph._region_tag == "d6"
 
     def test_read_graphml(self):
         """Test _read_graphml function
@@ -34,7 +34,14 @@ class TestConnectome(unittest.TestCase):
     def test_find_tag(self):
         """Test find tag function to find tag id for region names
         """
-        assert self.graph._find_tag() == "d6"
+        assert self.graph._find_tag_graphml() == "d6"
 
+    def test_get_nodes(self):
+        """Test get_nodes function to extract id_numbers and region names from grpahml
+        """
+        self.graph.get_nodes_graphml()
+
+        assert self.graph.n_Nodes > 0
+        assert len(self.graph.node_id) > 0
 
 
