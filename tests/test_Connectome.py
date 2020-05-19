@@ -6,7 +6,7 @@ from Main.Connectome import Connectome
 class TestConnectome(unittest.TestCase):
     root_dir = os.path.split(os.path.dirname(__file__))[0]
     path_to_graph = root_dir + '/Data/master_graphs_highres/33-master/master-std33-highres.graphml'
-    path_to_mni_parcellation = root_dir + '/Data/mni_parcellations/mni_template/mni_template-L2018_desc-scale1_atlas.nii.gz'
+    path_to_mni_parcellation = root_dir + '/Data/mni_parcellations/mni_template-L2018_desc-scale1_atlas.nii.gz'
     graph = Connectome( filename = path_to_graph)
     #                    parcellated_image_path= path_to_mni_parcellation,
     #                   scale = 1)
@@ -68,4 +68,8 @@ class TestConnectome(unittest.TestCase):
     def test_get_mni_node_coordinates(self):
         """test function to retrieve node coordinates of parcellated regions in MNI space
         """
-        pass
+        self.graph.get_nodes_graphml()
+        self.graph.get_mni_node_coordinates()
+
+        assert self.graph.coordinates.shape[1] == 3
+        assert self.graph.coordinates.shape[0] == self.graph.n_Nodes

@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 import nibabel as nib
-import nilearn as nl
+from nilearn import plotting
 import xml.etree.ElementTree as ET
 
 class Connectome:
@@ -26,7 +26,7 @@ class Connectome:
 
         if parcellated_image_path == None:
             root_dir = os.path.split(os.path.dirname(__file__))[0]
-            self.parcellated_image_path = root_dir + f'/Data/mni_parcellations/mni_template/mni_template-L2018_desc-scale{self.scale}_atlas.nii.gz'
+            self.parcellated_image_path = root_dir + f'/Data/mni_parcellations/mni_template-L2018_desc-scale{self.scale}_atlas.nii.gz'
         else:
             self.parcellated_image_path = parcellated_image_path
 
@@ -109,4 +109,5 @@ class Connectome:
     def get_mni_node_coordinates(self):
         """Retrieve node coordinates in MNI space from MNI parcellated brain
         """
-        pass
+        image = nib.load(self.parcellated_image_path)
+        self.coordinates = plotting.find_parcellation_cut_coords(image)
