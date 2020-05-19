@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import nibabel as nib
+import nilearn as nl
 import xml.etree.ElementTree as ET
 
 class Connectome:
@@ -9,24 +10,41 @@ class Connectome:
     This class contains the main functions required for loading and manipulating connectome graphs
     """
 
-    def __init__(self, filename):
+    def __init__(self, filename:str, parcellated_image_path:str, scale:int = 1):
         """__init__ to initialise class
 
         Arguments:
             filename {str} -- full pathname for the graph csv of graphml
         """
         self.filename = filename
-
+        self.scale = scale
+        if parcellated_image_path == None:
+            root_dir = os.path.split(os.path.dirname(__file__))[0]
+            self.parcellated_image_path = root_dir + f'/Data/mni_parcellations/mni_template/mni_template-L2018_desc-scale{self.scale}_atlas.nii.gz'
+        else:
+            self.parcellated_image_path = parcellated_image_path
+        #read graph format
         if filename.endswith('.graphml'):
             self._read_graphml()
         elif filename.endswith('.csv'):
             self._read_csv()
 
+        #get tags needed
+        self._region_tag = self._find_tag_graphml(tag = 'dn_name')
+        self._number_of_fibers_tag = self._find_tag_graphml(tag = 'number_of_fibers')
 
-        self._region_tag = self._find_tag_graphml()
-
+        #initialise graph variables
         self.n_Nodes = 0
         self.node_id = np.zeros((0, 2))
+        self.n_edges = 0
+        self.adj_matrix_full = np.zeros((0,0))
+
+    def build_graph_graphml(self):
+        self.get_nodes_graphml()
+        self.define_adjacency_matrix_graphml()
+
+    def build_graph_csv(self):
+        pass
 
     def _read_graphml(self):
         #load graphml
@@ -36,11 +54,11 @@ class Connectome:
     def _read_csv(self):
         pass
 
-    def _find_tag_graphml(self):
+    def _find_tag_graphml(self, tag:str):
         for child in self.__root.getiterator('{http://graphml.graphdrawing.org/xmlns}key'):
             key = child.keys()
             if key[0] == 'attr.name':
-                if child.attrib['attr.name'] == 'dn_name':
+                if child.attrib['attr.name'] == tag:
                     tag_id = child.attrib['id']
                     return tag_id
 
@@ -56,3 +74,32 @@ class Connectome:
                     label = child.text
                     self.n_Nodes += 1
                     self.node_id = np.append(self.node_id, ([[id_number, label]]), axis=0)
+
+    def define_adjacency_matrix_graphml(self):
+        """Define the adjacency matrix based from graphml
+        """
+        #initaialise full adjacency matrix
+        self.adj_matrix_full = np.zeros((self.n_Nodes,self.n_Nodes))
+
+        #populate full adjacency matrix
+        self.n_edges = 0
+        for child in self.__root.getiterator('{http://graphml.graphdrawing.org/xmlns}edge'):
+            self.n_edges += 1
+            source = child.keys()[0]
+            target = child.keys()[1]
+            x, y = int(child.attrib[source]), int(child.attrib[target])
+            for children in child.getiterator('{http://graphml.graphdrawing.org/xmlns}data'):
+                #print(children.keys())
+                for keys in children.keys():
+                    if children.attrib[keys] == self._number_of_fibers_tag:
+                        n_fibers = float(children.text)
+            self.adj_matrix_full[x-1,y-1] = 1.0 * n_fibers
+            self.adj_matrix_full[y-1,x-1] = 1.0 * n_fibers
+
+        #normalise adjacency matrix to highest value
+        #adj_matrix_full = adj_matrix_full / np.amax(adj_matrix_full)
+
+    def get_mni_node_coordinates(self):
+        """Retrieve node coordinates in MNI space from MNI parcellated brain
+        """
+        pass
