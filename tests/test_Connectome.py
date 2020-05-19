@@ -9,7 +9,32 @@ class TestConnectome(unittest.TestCase):
     graph = Connectome(path_to_graph)
 
     def test_init(self):
-
+        """Test initalisation of Connectome object
+        """
+        #test identification of file type as graphml
         assert self.path_to_graph.endswith('.graphml') == True
 
+        #test correct attribution of filename
         assert self.path_to_graph == self.graph.filename
+
+        #test call to _find_tag produces expected result for test graphml
+        assert self.graph.tag_id == self.graph._find_tag()
+        assert self.graph.tag_id == "d6"
+
+    def test_read_graphml(self):
+        """Test _read_graphml function
+        """
+        pass
+
+    def test_read_csv(self):
+        """Test _read_csv function
+        """
+        pass
+
+    def test_find_tag(self):
+        """Test find tag function to find tag id for region names
+        """
+        assert self.graph._find_tag() == "d6"
+
+
+
