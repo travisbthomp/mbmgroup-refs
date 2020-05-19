@@ -13,6 +13,7 @@ setup(
         'nibabel',
         'numpy',
         'pandas',
-        'nilearn'
+        'nilearn',
+        'matplotlib'
     ],
 )
