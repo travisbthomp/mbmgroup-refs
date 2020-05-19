@@ -13,7 +13,7 @@ path_to_graphml = root_dir + 'images/master_graphs_highres/33-master/master-std3
 Connectome = Connectome(path_to_graphml)
 
 #path to MNI parcellation
-path_to_mni_parcellation = root_dir + '/Volumes/Pavan_SSD/Connectome_atrophy/Development/mbmgroup-refs/images/mni_parcellations/mni_template-L2018_desc-scale1_atlas.nii.gz'
+path_to_mni_parcellation = root_dir + '../Data/mni_parcellations/mni_template-L2018_desc-scale1_atlas.nii.gz'
 
 #load mni_parcellation image
 mni_parcellation = nib.load(path_to_mni_parcellation)
@@ -21,6 +21,5 @@ mni_parcellation = nib.load(path_to_mni_parcellation)
 #set connectome coordinates according to mni parcellation
 Connectome.get_and_set_coordinates(path_to_mni_parcellation)
 
-
-
-
+#Load Data from Mindboggle/SPM
+#Mindboggle
