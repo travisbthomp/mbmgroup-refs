@@ -23,10 +23,10 @@ class Connectome:
             self._read_csv()
 
 
-        self.n_Nodes = 0
-        self.id_Nodes = np.zeros((0,2))
+        self._region_tag = self._find_tag_graphml()
 
-        self.tag_id = self._find_tag()
+        self.n_Nodes = 0
+        self.node_id = np.zeros((0, 2))
 
     def _read_graphml(self):
         #load graphml
@@ -36,7 +36,7 @@ class Connectome:
     def _read_csv(self):
         pass
 
-    def _find_tag(self):
+    def _find_tag_graphml(self):
         for child in self.__root.getiterator('{http://graphml.graphdrawing.org/xmlns}key'):
             key = child.keys()
             if key[0] == 'attr.name':
@@ -44,7 +44,15 @@ class Connectome:
                     tag_id = child.attrib['id']
                     return tag_id
 
-    def get_nodes(self):
+    def get_nodes_graphml(self):
         """Get node id's and region names
         """
-        pass
+        for node in self.__root[-1].iter('{http://graphml.graphdrawing.org/xmlns}node'):
+            id_number =  node.attrib['id']
+            children = list(node.iter())
+            for child in children:
+                key = child.keys()
+                if child.attrib[key[0]] == self._region_tag:
+                    label = child.text
+                    self.n_Nodes += 1
+                    self.node_id = np.append(self.node_id, ([[id_number, label]]), axis=0)
