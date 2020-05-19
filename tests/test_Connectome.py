@@ -6,9 +6,10 @@ from Main.Connectome import Connectome
 class TestConnectome(unittest.TestCase):
     root_dir = os.path.split(os.path.dirname(__file__))[0]
     path_to_graph = root_dir + '/Data/master_graphs_highres/33-master/master-std33-highres.graphml'
-    path_to_mni_parcellation = '/Data/mni_parcellations/mni_template/mni_template-L2018_desc-scale1_atlas.nii.gz'
-    graph = Connectome(path_to_graph, path_to_mni_parcellation)
-
+    path_to_mni_parcellation = root_dir + '/Data/mni_parcellations/mni_template/mni_template-L2018_desc-scale1_atlas.nii.gz'
+    graph = Connectome( filename = path_to_graph)
+    #                    parcellated_image_path= path_to_mni_parcellation,
+    #                   scale = 1)
     def test_init(self):
         """Test initalisation of Connectome object
         """
@@ -17,6 +18,7 @@ class TestConnectome(unittest.TestCase):
 
         #test correct attribution of filename
         assert self.path_to_graph == self.graph.filename
+        assert self.graph.parcellated_image_path == self.path_to_mni_parcellation
 
         #test call to _find_tag produces expected result for test graphml
         assert self.graph._region_tag == 'd6'

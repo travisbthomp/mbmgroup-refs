@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 import nibabel as nib
@@ -10,19 +11,25 @@ class Connectome:
     This class contains the main functions required for loading and manipulating connectome graphs
     """
 
-    def __init__(self, filename:str, parcellated_image_path:str, scale:int = 1):
+    def __init__(self,
+                filename:str,
+                scale:int = 1,
+                parcellated_image_path:str = None):
         """__init__ to initialise class
 
         Arguments:
             filename {str} -- full pathname for the graph csv of graphml
         """
+        #initalise input variables
         self.filename = filename
         self.scale = scale
+
         if parcellated_image_path == None:
             root_dir = os.path.split(os.path.dirname(__file__))[0]
             self.parcellated_image_path = root_dir + f'/Data/mni_parcellations/mni_template/mni_template-L2018_desc-scale{self.scale}_atlas.nii.gz'
         else:
             self.parcellated_image_path = parcellated_image_path
+
         #read graph format
         if filename.endswith('.graphml'):
             self._read_graphml()
