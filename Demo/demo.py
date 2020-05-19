@@ -15,9 +15,10 @@ Connectome = Connectome(filename = path_to_graphml)
 
 #path to MNI parcellation
 
-Connectome.get_nodes_graphml()
-Connectome.define_adjacency_matrix_graphml()
-Connectome.get_mni_node_coordinates()
+Connectome.build_graph_graphml()
+#Connectome.get_nodes_graphml()
+#Connectome.define_adjacency_matrix_graphml()
+#Connectome.get_mni_node_coordinates()
 
 plotting.plot_connectome(node_coords=Connectome.coordinates, adjacency_matrix=Connectome.adj_matrix_full)
 plotting.show()
