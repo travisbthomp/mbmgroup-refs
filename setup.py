@@ -12,6 +12,7 @@ setup(
     install_requires=[
         'nibabel',
         'numpy',
-        'pandas'
+        'pandas',
+        'nilearn'
     ],
 )
