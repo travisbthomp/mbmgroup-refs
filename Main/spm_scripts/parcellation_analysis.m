@@ -37,7 +37,7 @@ beta_image = spm_vol(beta_image_path);
 beta_values = zeros(n_regions,1);
 
 % Compute mask for each region
-for index = 1:3
+for index = 1:n_regions
     
     % output file name 
     output_file = [output_directory, sprintf('mask_region_%d.nii', index)];
