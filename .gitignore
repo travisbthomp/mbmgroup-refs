@@ -7,3 +7,6 @@ env
 #pycache
 Main/__pycache__
 tests/__pycache__
+
+#matlab cache
+Main/spm_scripts/._*.m
