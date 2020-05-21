@@ -50,8 +50,10 @@ for index = 1:n_regions
     beta_values(index,1) = spm_summarise(beta_image, mask, 'mean');
 end 
 
+beta_values = beta_values / max(beta_values);
+
 regional_mean_beta_filename = [output_directory, 'regional_mean_beta_coeffcients.csv'];
-csvwrite(regional_mean_beta_filename, beta_values);
+writematrix(beta_values, regional_mean_beta_filename);
 
 
 
