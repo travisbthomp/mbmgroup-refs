@@ -50,10 +50,14 @@ for index = 1:n_regions
     beta_values(index,1) = spm_summarise(beta_image, mask, 'mean');
 end 
 
-beta_values = beta_values / max(beta_values);
+% Normalise beta values to highest value
+normalised_beta_values = beta_values / max(beta_values);
 
+% Save outputs to csv files
 regional_mean_beta_filename = [output_directory, 'regional_mean_beta_coeffcients.csv'];
 writematrix(beta_values, regional_mean_beta_filename);
 
+normalised_regional_mean_beta_filename = [output_directory, 'normalised_regional_mean_beta_coeffcients.csv'];
+writematrix(normalised_beta_values, normalised_regional_mean_beta_filename);
 
 
