@@ -75,7 +75,7 @@ class Connectome:
         pass
 
     def _find_tag_graphml(self, tag:str):
-        for child in self.__root.getiterator('{http://graphml.graphdrawing.org/xmlns}key'):
+        for child in self.__root.iter('{http://graphml.graphdrawing.org/xmlns}key'):
             key = child.keys()
             if key[0] == 'attr.name':
                 if child.attrib['attr.name'] == tag:
@@ -103,12 +103,12 @@ class Connectome:
 
         #populate full adjacency matrix
         self.n_edges = 0
-        for child in self.__root.getiterator('{http://graphml.graphdrawing.org/xmlns}edge'):
+        for child in self.__root.iter('{http://graphml.graphdrawing.org/xmlns}edge'):
             self.n_edges += 1
             source = child.keys()[0]
             target = child.keys()[1]
             x, y = int(child.attrib[source]), int(child.attrib[target])
-            for children in child.getiterator('{http://graphml.graphdrawing.org/xmlns}data'):
+            for children in child.iter('{http://graphml.graphdrawing.org/xmlns}data'):
                 #print(children.keys())
                 for keys in children.keys():
                     if children.attrib[keys] == self._number_of_fibers_tag:
