@@ -5,6 +5,9 @@ import os
 from Main.Connectome import Connectome
 
 class TestConnectome(unittest.TestCase):
+    """Test class for testing functions in Connectome object
+    """
+    #Test set up
     root_dir = os.path.split(os.path.dirname(__file__))[0]
     path_to_graph = root_dir + '/Data/master_graphs_highres/33-master/master-std33-highres.graphml'
     path_to_mni_parcellation = root_dir + '/Data/mni_parcellations/mni_template-L2018_desc-scale1_atlas.nii.gz'
@@ -79,3 +82,28 @@ class TestConnectome(unittest.TestCase):
 
         assert self.graph.coordinates.shape[1] == 3
         assert self.graph.coordinates.shape[0] == self.graph.n_Nodes
+
+class TestConnectomeDataframe(unittest.TestCase):
+    """Test functions to build and output dataframe file
+    """
+    root_dir = os.path.split(os.path.dirname(__file__))[0]
+    path_to_graph = root_dir + '/Data/master_graphs_highres/33-master/master-std33-highres.graphml'
+    path_to_mni_parcellation = root_dir + '/Data/mni_parcellations/mni_template-L2018_desc-scale1_atlas.nii.gz'
+    graph = Connectome( filename = path_to_graph)
+
+    graph.get_nodes_graphml()
+    graph.get_mni_node_coordinates()
+
+    def test_create_dataframe(self):
+        self.graph.create_dataframe()
+
+        assert self.graph.graphml_data.shape == (self.n_Nodes, 5)
+
+    def test_add_to_dataframe(self):
+        pass
+
+class TestConnectomeBuild(unittest.TestCase):
+    """Test main function for building Connectome
+    """
+    def test_build_connectome(self):
+        pass
