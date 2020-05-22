@@ -54,6 +54,9 @@ class Connectome:
         self.adj_matrix_full = np.zeros((0,0))
         self.coordinates = None
 
+        # Variable for Dataframe
+        self.dataframe = None
+
     def build_graph_graphml(self):
         self.get_nodes_graphml()
         self.define_adjacency_matrix_graphml()
@@ -121,3 +124,20 @@ class Connectome:
         """
         image = nib.load(self.parcellated_image_path)
         self.coordinates = plotting.find_parcellation_cut_coords(image)
+
+    def create_dataframe(self):
+        """Create dataframe to output regional number and labels, coordinates
+        """
+
+        self._columns = ['ID','label','x','y','z']
+
+        #create data by concatenating id_nodes with connectome_coords
+        data = np.concatenate((self.node_id, self.coordinates), axis=1)
+
+        #create coords
+        self.graphml_data = pd.DataFrame(data, index=range(Node_id.shape[0]), columns=self._columns)
+
+    def _add_to_dataframe(self):
+        """Append columns to dataframe
+        """
+        pass
