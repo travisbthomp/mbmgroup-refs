@@ -110,6 +110,18 @@ class TestConnectomeDataframe(unittest.TestCase):
 
         assert self.graph.graphml_data.shape == (self.graph.n_Nodes, len(self.graph._base_columns) + 1)
 
+    def test_save_dataframe(self):
+        """test save dataframe function
+        """
+        self.graph._create_dataframe()
+        self.graph._add_to_dataframe('Atrophy Score', self.atrophy_scores)
+
+        filename = self.root_dir + 'csv_output.csv'
+
+        self.graph._save_dataframe(csv_filename = filename)
+
+        assert os.path.isfile(filename)
+
 class TestConnectomeBuild(unittest.TestCase):
     """Test main function for building Connectome
     """

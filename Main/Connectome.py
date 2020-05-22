@@ -141,3 +141,8 @@ class Connectome:
         """Append columns to dataframe
         """
         self.graphml_data[column_name] = input_data
+
+    def _save_dataframe(self, csv_filename:str):
+        """Save dataframe
+        """
+        self.graphml_data.to_csv(csv_filename)
