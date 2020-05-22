@@ -1,5 +1,5 @@
 import unittest
-import numpy
+import numpy as np
 import os
 
 from Main.Connectome import Connectome
@@ -27,16 +27,6 @@ class TestConnectome(unittest.TestCase):
         #test call to _find_tag produces expected result for test graphml
         assert self.graph._region_tag == 'd6'
         assert self.graph._number_of_fibers_tag == 'd9'
-
-    def test_build_graph_graphml(self):
-        """testing build_graph function to make the graph from input file
-        """
-        self.graph.build_graph_graphml()
-
-        assert self.graph.n_Nodes > 0
-        assert self.graph.n_edges > 0
-        assert self.graph.adj_matrix_full.shape == (self.graph.n_Nodes, self.graph.n_Nodes)
-        assert self.graph.coordinates.shape == (self.graph.n_Nodes,3)
 
     def test_read_graphml(self):
         """Test _read_graphml function
@@ -77,7 +67,7 @@ class TestConnectome(unittest.TestCase):
     def test_get_mni_node_coordinates(self):
         """test function to retrieve node coordinates of parcellated regions in MNI space
         """
-        self.graph.get_nodes_graphml()
+        #self.graph.get_nodes_graphml()
         self.graph.get_mni_node_coordinates()
 
         assert self.graph.coordinates.shape[1] == 3
@@ -91,19 +81,52 @@ class TestConnectomeDataframe(unittest.TestCase):
     path_to_mni_parcellation = root_dir + '/Data/mni_parcellations/mni_template-L2018_desc-scale1_atlas.nii.gz'
     graph = Connectome( filename = path_to_graph)
 
+    atrophy_scores_path = '/Volumes/Pavan_SSD/Connectome_atrophy/analysis_output/spm_analysis/regional_masks/normalised_regional_mean_beta_coeffcients.csv'
+    atrophy_scores = np.genfromtxt(atrophy_scores_path)
+
     graph.get_nodes_graphml()
     graph.get_mni_node_coordinates()
 
     def test_create_dataframe(self):
-        self.graph.create_dataframe()
+        """Test the correct creation of the dataframe
+        """
+        self.graph._create_dataframe()
 
-        assert self.graph.graphml_data.shape == (self.n_Nodes, 5)
+        assert self.graph.graphml_data.shape == (self.graph.n_Nodes, len(self.graph._base_columns))
+
+        int_ids = self.graph.graphml_data['ID'].astype(int).to_numpy()
+        assert int_ids.all() == np.sort(int_ids).all()
+
+        dims = ['x', 'y', 'z']
+
+        for n, i in enumerate(dims):
+            assert self.graph.graphml_data[i].astype(float).to_numpy().all() == self.graph.coordinates[:,n].all()
 
     def test_add_to_dataframe(self):
-        pass
+        """testing function to add columns to dataframe
+        """
+        self.graph._create_dataframe()
+        self.graph._add_to_dataframe('Atrophy Score', self.atrophy_scores)
+
+        assert self.graph.graphml_data.shape == (self.graph.n_Nodes, len(self.graph._base_columns) + 1)
 
 class TestConnectomeBuild(unittest.TestCase):
     """Test main function for building Connectome
     """
-    def test_build_connectome(self):
-        pass
+    root_dir = os.path.split(os.path.dirname(__file__))[0]
+    path_to_graph = root_dir + '/Data/master_graphs_highres/33-master/master-std33-highres.graphml'
+    path_to_mni_parcellation = root_dir + '/Data/mni_parcellations/mni_template-L2018_desc-scale1_atlas.nii.gz'
+    graph = Connectome( filename = path_to_graph)
+
+    def test_build_graph_graphml(self):
+        """testing build_graph function to make the graph from input file
+        """
+        self.graph.build_graph_graphml()
+
+        assert self.graph.n_Nodes > 0
+        assert self.graph.n_edges > 0
+        assert self.graph.adj_matrix_full.shape == (self.graph.n_Nodes, self.graph.n_Nodes)
+        assert self.graph.coordinates.shape == (self.graph.n_Nodes,3)
+
+if __name__ == '__main__':
+    unittest.main()
