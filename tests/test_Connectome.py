@@ -116,7 +116,7 @@ class TestConnectomeDataframe(unittest.TestCase):
         self.graph._create_dataframe()
         self.graph._add_to_dataframe('Atrophy Score', self.atrophy_scores)
 
-        filename = self.root_dir + 'csv_output.csv'
+        filename = self.root_dir + '/tests/csv_output.csv'
 
         self.graph._save_dataframe(csv_filename = filename)
 
@@ -133,12 +133,15 @@ class TestConnectomeBuild(unittest.TestCase):
     def test_build_graph_graphml(self):
         """testing build_graph function to make the graph from input file
         """
-        self.graph.build_graph_graphml()
+        filename = self.root_dir + '/tests/csv_build_output.csv'
+
+        self.graph.build_graph_graphml(csv_outfile=filename)
 
         assert self.graph.n_Nodes > 0
         assert self.graph.n_edges > 0
         assert self.graph.adj_matrix_full.shape == (self.graph.n_Nodes, self.graph.n_Nodes)
         assert self.graph.coordinates.shape == (self.graph.n_Nodes,3)
+        assert os.path.isfile(filename)
 
 if __name__ == '__main__':
     unittest.main()

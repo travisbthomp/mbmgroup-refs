@@ -57,10 +57,12 @@ class Connectome:
         # Variable for Dataframe
         self.dataframe = None
 
-    def build_graph_graphml(self):
+    def build_graph_graphml(self, csv_outfile:str):
         self.get_nodes_graphml()
         self.define_adjacency_matrix_graphml()
         self.get_mni_node_coordinates()
+        self._create_dataframe()
+        self._save_dataframe(csv_filename=csv_outfile)
 
 
     def build_graph_csv(self):
