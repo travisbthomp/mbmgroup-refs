@@ -125,19 +125,19 @@ class Connectome:
         image = nib.load(self.parcellated_image_path)
         self.coordinates = plotting.find_parcellation_cut_coords(image)
 
-    def create_dataframe(self):
+    def _create_dataframe(self):
         """Create dataframe to output regional number and labels, coordinates
         """
 
-        self._columns = ['ID','label','x','y','z']
+        self._base_columns = ['ID','Label','x','y','z']
 
         #create data by concatenating id_nodes with connectome_coords
         data = np.concatenate((self.node_id, self.coordinates), axis=1)
 
         #create coords
-        self.graphml_data = pd.DataFrame(data, index=range(Node_id.shape[0]), columns=self._columns)
+        self.graphml_data = pd.DataFrame(data, index=range(self.n_Nodes), columns=self._base_columns)
 
-    def _add_to_dataframe(self):
+    def _add_to_dataframe(self, column_name:str, input_data):
         """Append columns to dataframe
         """
-        pass
+        self.graphml_data[column_name] = input_data
