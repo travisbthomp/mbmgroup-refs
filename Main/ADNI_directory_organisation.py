@@ -1,4 +1,4 @@
-import os
+import os, fnmatch
 import pandas as pd
 
 
@@ -12,6 +12,7 @@ def find(extension, path):
     Returns:
         results  {string} -- string with the path to the files found with the given extension
     """
+    result = None
     for root, dirs, files in os.walk(path):
         for name in files:
             if fnmatch.fnmatch(name, extension):
@@ -31,8 +32,7 @@ def organise_directory(download_dir, subject_csv, target_file_path):
     subject_df = pd.read_csv(subject_csv)
     subject_id = subject_df['Subject'].to_numpy()
     for sub in subject_id:
-        print(subject_id)
-        path_sub = download_dir + sub
+        path_sub = download_dir + subP
         image_path = find('*.nii', path_sub)
         new_file_path = target_file_path + sub + '/'
         new_image_path = new_file_path + sub + '.nii'
@@ -43,8 +43,8 @@ def organise_directory(download_dir, subject_csv, target_file_path):
 
         os.rename(image_path, new_image_path)
 
-download_dir = '/Users/pavanchaggar/Downloads/ADNI1/'
-subject_csv = '/Users/pavanchaggar/Downloads/ADNI1/adni_baseline1_5_25_2020.csv'
-target_file_path = '/Users/pavanchaggar/Documents/ADNI/'
+download_dir = '/Users/pavanchaggar/Downloads/ADNI-4/'
+subject_csv = '/Users/pavanchaggar/Downloads/ADNI-4/AD_CN_PET_TEST_5_29_2020.csv'
+target_file_path = '/Users/pavanchaggar/Documents/PET_AD/'
 
-organise_directory(download_dir=download_dir, subject_csv=subject_csv, new_file_path=new_file_path)
+organise_directory(download_dir=download_dir, subject_csv=subject_csv,target_file_path=target_file_path)
