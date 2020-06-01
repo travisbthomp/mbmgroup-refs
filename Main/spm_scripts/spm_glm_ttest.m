@@ -20,9 +20,9 @@ csv = readtable(csv_path);
 subject_ids = csv.('Subject');
 
 % list containing paths to subject nii images
-group1 = strcat(data_dir, subject_ids, '/', subject_ids, '.nii');
+group1 = strcat(data_dir, subject_ids, '/', 'smwc1', subject_ids, '.nii');
 
-group2 = strcat(data_dir, subject_ids, '/', subject_ids, '.nii');
+group2 = strcat(data_dir, subject_ids, '/', 'smwc1', subject_ids, '.nii');
 
 
 % Load tissue volumes
