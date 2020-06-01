@@ -13,7 +13,7 @@
 data_dir = '/Users/pavanchaggar/Documents/ADNI/';
 
 % path to ADNI csv file containing subject information
-csv_path = '/Users/pavanchaggar/Documents/ADNI/adni_baseline1_5_25_2020_less.csv';
+csv_path = '/Users/pavanchaggar/Documents/ADNI/MRI_6_01_2020.csv';
 
 % output path for tissue volumes
 tissue_vol_output = '/Users/pavanchaggar/Documents/ADNI/tissue_vols.csv';
@@ -22,8 +22,10 @@ csv = readtable(csv_path);
 
 subject_ids = csv.('Subject');
 
+subject_groups = csv.('Group');
+
 % list containing paths to subject nii images
-subjects = strcat(data_dir, subject_ids, '/', subject_ids, '.nii');
+subjects = strcat(data_dir, subject_groups, '_', subject_ids, '/', subject_ids, '.nii');
 
 %% SPM Batch Processing
 
