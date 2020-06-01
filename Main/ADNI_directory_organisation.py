@@ -30,21 +30,29 @@ def organise_directory(download_dir, subject_csv, target_file_path):
         new_file_path {string} -- path to desired location
     """
     subject_df = pd.read_csv(subject_csv)
-    subject_id = subject_df['Subject'].to_numpy()
-    for sub in subject_id:
-        path_sub = download_dir + subP
+    n_subs = len(subject_df)
+    for n in range(n_subs):
+        sub = subject_df.iloc[n]['Subject']
+        group = subject_df.iloc[n]['Group']
+        path_sub = download_dir + sub
         image_path = find('*.nii', path_sub)
-        new_file_path = target_file_path + sub + '/'
+        new_file_path = target_file_path + group + '_' + sub + '/'
         new_image_path = new_file_path + sub + '.nii'
+        if os.path.exists(target_file_path):
+            pass
+        else:
+            os.mkdir(target_file_path)
+        
         if os.path.exists(new_file_path):
             pass
         else:
             os.mkdir(new_file_path)
 
+
         os.rename(image_path, new_image_path)
 
-download_dir = '/Users/pavanchaggar/Downloads/ADNI-4/'
-subject_csv = '/Users/pavanchaggar/Downloads/ADNI-4/AD_CN_PET_TEST_5_29_2020.csv'
-target_file_path = '/Users/pavanchaggar/Documents/PET_AD/'
+download_dir = '/Users/pavanchaggar/Downloads/ADNI/'
+subject_csv = '/Users/pavanchaggar/Downloads/MRI_6_01_2020.csv'
+target_file_path = '/Users/pavanchaggar/Documents/ADNI/'
 
 organise_directory(download_dir=download_dir, subject_csv=subject_csv,target_file_path=target_file_path)
