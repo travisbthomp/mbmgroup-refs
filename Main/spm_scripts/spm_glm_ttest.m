@@ -10,34 +10,40 @@
 %% Create Subject List
 
 % path to ADNI directory
-output_directory = '/Users/pavanchaggar/Documents/ADNI/';
+data_dir = '/Users/pavanchaggar/Documents/ADNI/';
 
 % path to ADNI csv file containing subject information
-csv_path = '/Users/pavanchaggar/Documents/ADNI/adni_baseline1_5_25_2020_less.csv';
+csv_path = '/Users/pavanchaggar/Documents/ADNI/MRI_6_01_2020.csv';
 
 csv = readtable(csv_path);
 
-subject_ids = csv.('Subject');
+% get subject IDs and groups
+subject_ids = csv.Subject;
 
-% list containing paths to subject nii images
-group1 = strcat(data_dir, subject_ids, '/', 'smwc1', subject_ids, '.nii');
+subject_groups = csv.Group;
 
-group2 = strcat(data_dir, subject_ids, '/', 'smwc1', subject_ids, '.nii');
+% make path string structure
+group1 = strcat(data_dir, subject_groups, '_', subject_ids, '/', 'smwc1', subject_ids, '.nii');
 
+group2 = strcat(data_dir, subject_groups, '_', subject_ids, '/', 'smwc1', subject_ids, '.nii');
+
+% create masks for groups and edit group arrays
+group1_mask = string(csv.Group) == "CN";
+
+group2_mask = string(csv.Group) == "AD";
+
+group1 = group1(group1_mask);
+group2 = group2(group2_mask);
 
 % Load tissue volumes
 tissue_vol_path = '/Users/pavanchaggar/Documents/ADNI/tissue_vols.csv';
 
-tissue_vols = readtable(tissue_vol_path);
+tissue_vols = readtable(tissue_vol_path, 'Delimiter',',');
 
 %% SPM Batch processing
-matlabbatch{1}.spm.stats.factorial_design.dir = {output_directory};
-matlabbatch{1}.spm.stats.factorial_design.des.t2.scans1 = {
-                                                           group1
-                                                           };
-matlabbatch{1}.spm.stats.factorial_design.des.t2.scans2 = {
-                                                           group2
-                                                           };
+matlabbatch{1}.spm.stats.factorial_design.dir = {data_dir};
+matlabbatch{1}.spm.stats.factorial_design.des.t2.scans1 = group1;
+matlabbatch{1}.spm.stats.factorial_design.des.t2.scans2 = group2;
 matlabbatch{1}.spm.stats.factorial_design.des.t2.dept = 0;
 matlabbatch{1}.spm.stats.factorial_design.des.t2.variance = 1;
 matlabbatch{1}.spm.stats.factorial_design.des.t2.gmsca = 0;
@@ -47,7 +53,7 @@ matlabbatch{1}.spm.stats.factorial_design.multi_cov = struct('files', {}, 'iCFI'
 matlabbatch{1}.spm.stats.factorial_design.masking.tm.tm_none = 1;
 matlabbatch{1}.spm.stats.factorial_design.masking.im = 1;
 matlabbatch{1}.spm.stats.factorial_design.masking.em = {''};
-matlabbatch{1}.spm.stats.factorial_design.globalc.g_user.global_uval = tissue_vols(:,3)+tissue_vols(:,4)+tissue_vols(:,5);
+matlabbatch{1}.spm.stats.factorial_design.globalc.g_user.global_uval = tissue_vols{:,2}+tissue_vols{:,3}+tissue_vols{:,4};
 matlabbatch{1}.spm.stats.factorial_design.globalm.gmsca.gmsca_no = 1;
 matlabbatch{1}.spm.stats.factorial_design.globalm.glonorm = 2;
 matlabbatch{2}.spm.stats.fmri_est.spmmat(1) = cfg_dep('Factorial design specification: SPM.mat File', substruct('.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','spmmat'));
@@ -68,3 +74,5 @@ matlabbatch{4}.spm.stats.results.conspec.conjunction = 1;
 matlabbatch{4}.spm.stats.results.conspec.mask.none = 1;
 matlabbatch{4}.spm.stats.results.units = 1;
 matlabbatch{4}.spm.stats.results.export{1}.csv = true;
+
+spm_jobman('run',matlabbatch)
