@@ -13,7 +13,10 @@
 data_dir = '/Users/pavanchaggar/Documents/ADNI/';
 
 % path to ADNI csv file containing subject information
-csv_path = '/Users/pavanchaggar/Documents/ADNI/adni_baseline1_5_25_2020.csv';
+csv_path = '/Users/pavanchaggar/Documents/ADNI/adni_baseline1_5_25_2020_less.csv';
+
+% output path for tissue volumes
+tissue_vol_output = '/Users/pavanchaggar/Documents/ADNI/tissue_vols.csv';
 
 csv = readtable(csv_path);
 
@@ -62,6 +65,8 @@ matlabbatch{1}.spm.spatial.preproc.warp.write = [0 0];
 matlabbatch{1}.spm.spatial.preproc.warp.vox = NaN;
 matlabbatch{1}.spm.spatial.preproc.warp.bb = [NaN NaN NaN
                                               NaN NaN NaN];
+                                          
+% Create Dartel template
 matlabbatch{2}.spm.tools.dartel.warp.images{1}(1) = cfg_dep('Segment: rc1 Images', substruct('.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','tiss', '()',{1}, '.','rc', '()',{':'}));
 matlabbatch{2}.spm.tools.dartel.warp.images{2}(1) = cfg_dep('Segment: rc2 Images', substruct('.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','tiss', '()',{2}, '.','rc', '()',{':'}));
 matlabbatch{2}.spm.tools.dartel.warp.settings.template = 'Template';
@@ -101,9 +106,11 @@ matlabbatch{3}.spm.tools.dartel.mni_norm.bb = [NaN NaN NaN
                                                NaN NaN NaN];
 matlabbatch{3}.spm.tools.dartel.mni_norm.preserve = 1;
 matlabbatch{3}.spm.tools.dartel.mni_norm.fwhm = [8 8 8];
+
+% Compute tissue vols
 matlabbatch{4}.spm.util.tvol.matfiles(1) = cfg_dep('Segment: Seg Params', substruct('.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','param', '()',{':'}));
 matlabbatch{4}.spm.util.tvol.tmax = 3;
 matlabbatch{4}.spm.util.tvol.mask = {'/Users/pavanchaggar/Documents/matlab_pkgs/spm12/tpm/mask_ICV.nii,1'};
-matlabbatch{4}.spm.util.tvol.outf = '';
+matlabbatch{4}.spm.util.tvol.outf = tissue_vol_output;
 
 spm_jobman('run',matlabbatch)
