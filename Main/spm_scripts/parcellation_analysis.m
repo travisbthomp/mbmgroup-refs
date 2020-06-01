@@ -8,16 +8,18 @@
 working_directory = '/Volumes/Pavan_SSD/Connectome_atrophy/Development/mbmgroup-refs/';
 
 % Set input directory 
-input_directory = '/Volumes/Pavan_SSD/Connectome_atrophy/analysis_output/spm_analysis/';
+input_directory = '/Users/pavanchaggar/Documents/ADNI/';
 
 % Set output directory 
 output_directory = [input_directory, 'regional_masks/'];
-
+if ~exist(output_directory, 'dir')
+    mkdir(output_directory)
+end
 % Get path to MNI parcellation
 parcellation_file = [working_directory, 'Data/mni_parcellations/mni_template-L2018_desc-scale1_atlas.nii'];
 
 % Beta .nii image path 
-beta_image_path = [input_directory, 'factorial/beta_0001.nii'];
+beta_image_path = [input_directory, 'beta_0001.nii'];
 
 %% Create masks and get mean Beta coefficients
 % Read parcellation file 
