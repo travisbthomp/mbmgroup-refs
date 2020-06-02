@@ -1,7 +1,7 @@
+%% SPM PET Processing ------------------------------------------------------
+% SPM processing pipeline performing:
+% 1. Registration to mni space
 %-----------------------------------------------------------------------
-% Job saved on 02-Jun-2020 15:52:25 by cfg_util (rev $Rev: 7345 $)
-% spm SPM - SPM12 (7771)
-% cfg_basicio BasicIO - Unknown
 %-----------------------------------------------------------------------
 
 % path to ADNI directory

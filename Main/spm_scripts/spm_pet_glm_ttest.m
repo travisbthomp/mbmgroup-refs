@@ -1,21 +1,44 @@
+%% SPM General Linear Model -----------------------------------------------
+% SPM General Linear Model set up t-test
+% 1. Factorial Design
+% 2. Model Estimation
+% 3. Define Contrasts 
+% 4. Output Contrast results
 %-----------------------------------------------------------------------
-% Job saved on 02-Jun-2020 16:55:29 by cfg_util (rev $Rev: 7345 $)
-% spm SPM - SPM12 (7771)
-% cfg_basicio BasicIO - Unknown
 %-----------------------------------------------------------------------
-matlabbatch{1}.spm.stats.factorial_design.dir = {'/Users/pavanchaggar/Documents/PET'};
-matlabbatch{1}.spm.stats.factorial_design.des.t2.scans1 = {
-                                                           '/Users/pavanchaggar/Documents/PET/AD_011_S_6303/norm011_S_6303.nii,1'
-                                                           '/Users/pavanchaggar/Documents/PET/AD_016_S_6839/norm016_S_6839.nii,1'
-                                                           '/Users/pavanchaggar/Documents/PET/AD_022_S_6796/norm022_S_6796.nii,1'
-                                                           '/Users/pavanchaggar/Documents/PET/AD_100_S_6713/norm100_S_6713.nii,1'
-                                                           };
-matlabbatch{1}.spm.stats.factorial_design.des.t2.scans2 = {
-                                                           '/Users/pavanchaggar/Documents/PET/CN_002_S_6103/norm002_S_6103.nii,1'
-                                                           '/Users/pavanchaggar/Documents/PET/CN_003_S_4644/norm003_S_4644.nii,1'
-                                                           '/Users/pavanchaggar/Documents/PET/CN_003_S_6259/norm003_S_6259.nii,1'
-                                                           '/Users/pavanchaggar/Documents/PET/CN_003_S_6260/norm003_S_6260.nii,1'
-                                                           };
+
+%% Create Subject List
+
+% path to ADNI directory
+data_dir = '/Users/pavanchaggar/Documents/PET/';
+
+% path to ADNI csv file containing subject information
+csv_path = '/Users/pavanchaggar/Documents/PET/AD_CN_PET_TEST_6_02_2020.csv';
+
+csv = readtable(csv_path);
+
+% get subject IDs and groups
+subject_ids = csv.Subject;
+
+subject_groups = csv.Group;
+
+% make path string structure
+group1 = strcat(data_dir, subject_groups, '_', subject_ids, '/', 'norm', subject_ids, '.nii');
+
+group2 = strcat(data_dir, subject_groups, '_', subject_ids, '/', 'norm', subject_ids, '.nii');
+
+% create masks for groups and edit group arrays
+group1_mask = string(csv.Group) == "CN";
+
+group2_mask = string(csv.Group) == "AD";
+
+group1 = group1(group1_mask);
+group2 = group2(group2_mask);
+
+
+matlabbatch{1}.spm.stats.factorial_design.dir = data_dir;
+matlabbatch{1}.spm.stats.factorial_design.des.t2.scans1 = group1;
+matlabbatch{1}.spm.stats.factorial_design.des.t2.scans2 = group2;
 matlabbatch{1}.spm.stats.factorial_design.des.t2.dept = 0;
 matlabbatch{1}.spm.stats.factorial_design.des.t2.variance = 1;
 matlabbatch{1}.spm.stats.factorial_design.des.t2.gmsca = 0;

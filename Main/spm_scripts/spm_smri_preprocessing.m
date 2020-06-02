@@ -1,4 +1,4 @@
-%% SPM Processing ------------------------------------------------------
+%% SPM SMRI Processing ------------------------------------------------------
 % SPM processing pipeline performing:
 % 1. Segmentation
 % 2. Create Dartel Template
