@@ -6,16 +6,22 @@
 % 4. Output Contrast results
 %-----------------------------------------------------------------------
 %-----------------------------------------------------------------------
-
+clear all 
 %% Create Subject List
 
 % path to ADNI directory
-data_dir = '/Users/pavanchaggar/Documents/ADNI/';
+data_dir = '/home/sabs-r3/Documents/atrophy_analysis/Data/LMCI_MRI/';
 
 % path to ADNI csv file containing subject information
-csv_path = '/Users/pavanchaggar/Documents/ADNI/MRI_6_01_2020.csv';
+group1_csv_path = '/home/sabs-r3/Documents/atrophy_analysis/Data/LMCI_MRI/LMCI_MRImatched_ABTAUPET_6_14_2020.csv';
+group1_csv = readtable(group1_csv_path);
 
-csv = readtable(csv_path);
+group2_csv_path = '/home/sabs-r3/Documents/atrophy_analysis/Data/LMCI_MRI/CN_PETmatched_MRI_6_14_2020.csv';
+group2_csv = readtable(group2_csv_path);
+
+csv = [group1_csv; group2_csv];
+
+%csv = readtable(csv_path);
 
 % get subject IDs and groups
 subject_ids = csv.Subject;
@@ -28,15 +34,15 @@ group1 = strcat(data_dir, subject_groups, '_', subject_ids, '/', 'smwc1', subjec
 group2 = strcat(data_dir, subject_groups, '_', subject_ids, '/', 'smwc1', subject_ids, '.nii');
 
 % create masks for groups and edit group arrays
-group1_mask = string(csv.Group) == "CN";
+group1_mask = string(csv.Group) == "LMCI";
 
-group2_mask = string(csv.Group) == "AD";
+group2_mask = string(csv.Group) == "CN";
 
 group1 = group1(group1_mask);
 group2 = group2(group2_mask);
 
 % Load tissue volumes
-tissue_vol_path = '/Users/pavanchaggar/Documents/ADNI/tissue_vols.csv';
+tissue_vol_path = '/home/sabs-r3/Documents/atrophy_analysis/Data/LMCI_MRI/tissue_vols.csv';
 
 tissue_vols = readtable(tissue_vol_path, 'Delimiter',',');
 
@@ -57,10 +63,10 @@ matlabbatch{1}.spm.stats.factorial_design.globalc.g_user.global_uval = tissue_vo
 matlabbatch{1}.spm.stats.factorial_design.globalm.gmsca.gmsca_no = 1;
 matlabbatch{1}.spm.stats.factorial_design.globalm.glonorm = 2;
 matlabbatch{2}.spm.stats.fmri_est.spmmat(1) = cfg_dep('Factorial design specification: SPM.mat File', substruct('.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','spmmat'));
-matlabbatch{2}.spm.stats.fmri_est.write_residuals = 1;
+matlabbatch{2}.spm.stats.fmri_est.write_residuals = 0;
 matlabbatch{2}.spm.stats.fmri_est.method.Classical = 1;
 matlabbatch{3}.spm.stats.con.spmmat(1) = cfg_dep('Model estimation: SPM.mat File', substruct('.','val', '{}',{2}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','spmmat'));
-matlabbatch{3}.spm.stats.con.consess{1}.tcon.name = 'Group1 v Group2';
+matlabbatch{3}.spm.stats.con.consess{1}.tcon.name = 'Group1 > Group2';
 matlabbatch{3}.spm.stats.con.consess{1}.tcon.weights = [1 -1];
 matlabbatch{3}.spm.stats.con.consess{1}.tcon.sessrep = 'none';
 matlabbatch{3}.spm.stats.con.delete = 0;
