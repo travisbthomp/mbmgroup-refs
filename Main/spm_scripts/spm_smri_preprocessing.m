@@ -6,9 +6,8 @@
 % 4. Compute tissue volumes
 %-----------------------------------------------------------------------
 %-----------------------------------------------------------------------
-
+clear all 
 %% Create Subject List
-
 % path to ADNI directory
 data_dir = '/home/sabs-r3/Documents/atrophy_analysis/Data/LMCI_MRI/';
 
@@ -31,6 +30,16 @@ subject_groups = all_csv.('Group');
 % list containing paths to subject nii images
 subjects = strcat(data_dir, subject_groups, '_', subject_ids, '/', subject_ids, '.nii');
 
+mat_files = strcat(data_dir, subject_groups, '_', subject_ids, '/', subject_ids, '_seg8.mat');
+
+rc1 = strcat(data_dir, subject_groups, '_', subject_ids, '/', 'rc1', subject_ids, '.nii');
+rc2 = strcat(data_dir, subject_groups, '_', subject_ids, '/', 'rc2', subject_ids, '.nii');
+
+DARTEL_template = strcat(data_dir, subject_groups(1), '_', subject_ids(1), '/', 'Template_6.nii');
+
+flow_fields = strcat(data_dir, subject_groups, '_', subject_ids, '/', 'u_rc1', subject_ids, '_Template.nii');
+
+c1 = strcat(data_dir, subject_groups, '_', subject_ids, '/', 'c1', subject_ids, '.nii');
 %% SPM Batch Processing
 
 matlabbatch{1}.spm.spatial.preproc.channel.vols = subjects;
@@ -71,52 +80,51 @@ matlabbatch{1}.spm.spatial.preproc.warp.write = [0 0];
 matlabbatch{1}.spm.spatial.preproc.warp.vox = NaN;
 matlabbatch{1}.spm.spatial.preproc.warp.bb = [NaN NaN NaN
                                               NaN NaN NaN];
+
+matlabbatch{2}.spm.util.tvol.matfiles = mat_files;
+matlabbatch{2}.spm.util.tvol.tmax = 3;
+matlabbatch{2}.spm.util.tvol.mask = {'/home/sabs-r3/Documents/MATLAB/spm12/tpm/mask_ICV.nii,1'};
+matlabbatch{2}.spm.util.tvol.outf = tissue_vol_output;
                                           
 % Create Dartel template
-matlabbatch{2}.spm.tools.dartel.warp.images{1}(1) = cfg_dep('Segment: rc1 Images', substruct('.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','tiss', '()',{1}, '.','rc', '()',{':'}));
-matlabbatch{2}.spm.tools.dartel.warp.images{2}(1) = cfg_dep('Segment: rc2 Images', substruct('.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','tiss', '()',{2}, '.','rc', '()',{':'}));
-matlabbatch{2}.spm.tools.dartel.warp.settings.template = 'Template';
-matlabbatch{2}.spm.tools.dartel.warp.settings.rform = 0;
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(1).its = 3;
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(1).rparam = [4 2 1e-06];
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(1).K = 0;
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(1).slam = 16;
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(2).its = 3;
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(2).rparam = [2 1 1e-06];
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(2).K = 0;
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(2).slam = 8;
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(3).its = 3;
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(3).rparam = [1 0.5 1e-06];
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(3).K = 1;
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(3).slam = 4;
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(4).its = 3;
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(4).rparam = [0.5 0.25 1e-06];
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(4).K = 2;
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(4).slam = 2;
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(5).its = 3;
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(5).rparam = [0.25 0.125 1e-06];
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(5).K = 4;
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(5).slam = 1;
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(6).its = 3;
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(6).rparam = [0.25 0.125 1e-06];
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(6).K = 6;
-matlabbatch{2}.spm.tools.dartel.warp.settings.param(6).slam = 0.5;
-matlabbatch{2}.spm.tools.dartel.warp.settings.optim.lmreg = 0.01;
-matlabbatch{2}.spm.tools.dartel.warp.settings.optim.cyc = 3;
-matlabbatch{2}.spm.tools.dartel.warp.settings.optim.its = 3;
-matlabbatch{3}.spm.tools.dartel.mni_norm.template(1) = cfg_dep('Run Dartel (create Templates): Template (Iteration 6)', substruct('.','val', '{}',{2}, '.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','template', '()',{7}));
-matlabbatch{3}.spm.tools.dartel.mni_norm.data.subjs.flowfields(1) = cfg_dep('Run Dartel (create Templates): Flow Fields', substruct('.','val', '{}',{2}, '.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','files', '()',{':'}));
-matlabbatch{3}.spm.tools.dartel.mni_norm.data.subjs.images{1}(1) = cfg_dep('Segment: c1 Images', substruct('.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','tiss', '()',{1}, '.','c', '()',{':'}));
-matlabbatch{3}.spm.tools.dartel.mni_norm.vox = [NaN NaN NaN];
-matlabbatch{3}.spm.tools.dartel.mni_norm.bb = [NaN NaN NaN
+matlabbatch{3}.spm.tools.dartel.warp.images{1} = rc1;
+matlabbatch{3}.spm.tools.dartel.warp.images{2} = rc2;
+matlabbatch{3}.spm.tools.dartel.warp.settings.template = 'Template';
+matlabbatch{3}.spm.tools.dartel.warp.settings.rform = 0;
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(1).its = 3;
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(1).rparam = [4 2 1e-06];
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(1).K = 0;
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(1).slam = 16;
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(2).its = 3;
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(2).rparam = [2 1 1e-06];
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(2).K = 0;
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(2).slam = 8;
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(3).its = 3;
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(3).rparam = [1 0.5 1e-06];
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(3).K = 1;
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(3).slam = 4;
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(4).its = 3;
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(4).rparam = [0.5 0.25 1e-06];
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(4).K = 2;
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(4).slam = 2;
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(5).its = 3;
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(5).rparam = [0.25 0.125 1e-06];
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(5).K = 4;
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(5).slam = 1;
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(6).its = 3;
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(6).rparam = [0.25 0.125 1e-06];
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(6).K = 6;
+matlabbatch{3}.spm.tools.dartel.warp.settings.param(6).slam = 0.5;
+matlabbatch{3}.spm.tools.dartel.warp.settings.optim.lmreg = 0.01;
+matlabbatch{3}.spm.tools.dartel.warp.settings.optim.cyc = 3;
+matlabbatch{3}.spm.tools.dartel.warp.settings.optim.its = 3;
+matlabbatch{4}.spm.tools.dartel.mni_norm.template(1) = DARTEL_template;
+matlabbatch{4}.spm.tools.dartel.mni_norm.data.subjs.flowfields = flow_fields;
+matlabbatch{4}.spm.tools.dartel.mni_norm.data.subjs.images{1} = c1;
+matlabbatch{4}.spm.tools.dartel.mni_norm.vox = [NaN NaN NaN];
+matlabbatch{4}.spm.tools.dartel.mni_norm.bb = [NaN NaN NaN
                                                NaN NaN NaN];
-matlabbatch{3}.spm.tools.dartel.mni_norm.preserve = 1;
-matlabbatch{3}.spm.tools.dartel.mni_norm.fwhm = [8 8 8];
-
-% Compute tissue vols
-matlabbatch{4}.spm.util.tvol.matfiles(1) = cfg_dep('Segment: Seg Params', substruct('.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','param', '()',{':'}));
-matlabbatch{4}.spm.util.tvol.tmax = 3;
-matlabbatch{4}.spm.util.tvol.mask = {'/home/sabs-r3/Documents/MATLAB/spm12/tpm/mask_ICV.nii,1'};
-matlabbatch{4}.spm.util.tvol.outf = tissue_vol_output;
+matlabbatch{4}.spm.tools.dartel.mni_norm.preserve = 1;
+matlabbatch{4}.spm.tools.dartel.mni_norm.fwhm = [8 8 8];
 
 spm_jobman('run',matlabbatch)
