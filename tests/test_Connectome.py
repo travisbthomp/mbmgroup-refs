@@ -10,7 +10,7 @@ class TestConnectome(unittest.TestCase):
     #Test set up
     root_dir = os.path.split(os.path.dirname(__file__))[0]
     path_to_graph = root_dir + '/Data/master_graphs_highres/33-master/master-std33-highres.graphml'
-    path_to_mni_parcellation = root_dir + '/Data/mni_parcellations/mni_template-L2018_desc-scale1_atlas.nii.gz'
+    path_to_mni_parcellation = root_dir + '/Data/mni_parcellations/mni-parcellation-scale1_atlas.nii.gz'
     graph = Connectome( filename = path_to_graph)
     #                    parcellated_image_path= path_to_mni_parcellation,
     #                   scale = 1)
@@ -78,7 +78,7 @@ class TestConnectomeDataframe(unittest.TestCase):
     """
     root_dir = os.path.split(os.path.dirname(__file__))[0]
     path_to_graph = root_dir + '/Data/master_graphs_highres/33-master/master-std33-highres.graphml'
-    path_to_mni_parcellation = root_dir + '/Data/mni_parcellations/mni_template-L2018_desc-scale1_atlas.nii.gz'
+    path_to_mni_parcellation = root_dir + '/Data/mni_parcellations/mni-parcellation-scale1_atlas.nii.gz'
     graph = Connectome( filename = path_to_graph)
 
     atrophy_scores_path = '/Volumes/Pavan_SSD/Connectome_atrophy/analysis_output/spm_analysis/regional_masks/normalised_regional_mean_beta_coeffcients.csv'
@@ -127,7 +127,7 @@ class TestConnectomeBuild(unittest.TestCase):
     """
     root_dir = os.path.split(os.path.dirname(__file__))[0]
     path_to_graph = root_dir + '/Data/master_graphs_highres/33-master/master-std33-highres.graphml'
-    path_to_mni_parcellation = root_dir + '/Data/mni_parcellations/mni_template-L2018_desc-scale1_atlas.nii.gz'
+    path_to_mni_parcellation = root_dir + '/Data/mni_parcellations/mni-parcellation-scale1_atlas.nii.gz'
     graph = Connectome( filename = path_to_graph)
 
     def test_build_graph_graphml(self):

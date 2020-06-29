@@ -33,7 +33,7 @@ class Connectome:
                 root_dir = '/'.join(directory_list[:-4])
             else:
                 pass
-            self.parcellated_image_path = root_dir + f'/Data/mni_parcellations/mni_template-L2018_desc-scale{self.scale}_atlas.nii.gz'
+            self.parcellated_image_path = root_dir + f'/Data/mni_parcellations/mni-parcellation-scale{self.scale}_atlas.nii.gz'
         else:
             self.parcellated_image_path = parcellated_image_path
 
