@@ -48,11 +48,10 @@ def organise_directory(download_dir, subject_csv, target_file_path):
         else:
             os.mkdir(new_file_path)
 
-
         os.rename(image_path, new_image_path)
 
-download_dir = '/Users/pavanchaggar/Downloads/ADNI/'
-subject_csv = '/Users/pavanchaggar/Downloads/MRI_6_01_2020.csv'
-target_file_path = '/Users/pavanchaggar/Documents/ADNI/'
+download_dir = '/Users/pavanchaggar/Downloads/ADNI-4/'
+subject_csv = '/Users/pavanchaggar/Downloads/AD_PETmatched_MRI_6_16_2020.csv'
+target_file_path = '/Users/pavanchaggar/Documents/AD_PET/AD/MRI/'
 
 organise_directory(download_dir=download_dir, subject_csv=subject_csv,target_file_path=target_file_path)

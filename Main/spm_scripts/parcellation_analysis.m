@@ -4,22 +4,24 @@
 %region 
 
 %% Set directories
+clear all 
 % Set directory to mbmgroup-refs
-working_directory = '/Volumes/Pavan_SSD/Connectome_atrophy/Development/mbmgroup-refs/';
+working_directory = '/Volumes/Pavan_SSD/Connectome_atrophy/';
 
 % Set input directory 
-input_directory = '/Users/pavanchaggar/Documents/ADNI/';
+input_directory = '/Volumes/Pavan_SSD/Connectome_atrophy/Data/LMCI/ab1_stats/';
 
 % Set output directory 
-output_directory = [input_directory, 'regional_masks/'];
+output_directory = [input_directory, 'regional_masks_5/'];
 if ~exist(output_directory, 'dir')
     mkdir(output_directory)
 end
 % Get path to MNI parcellation
-parcellation_file = [working_directory, 'Data/mni_parcellations/mni_template-L2018_desc-scale1_atlas.nii'];
+parcellation_file = [working_directory, 'sub-01_label-L2018_desc-scale5_atlas.nii'];
 
 % Beta .nii image path 
-beta_image_path = [input_directory, 'beta_0001.nii'];
+%beta_image_path = [input_directory, 'beta_0002.nii'];
+beta_image_path = [input_directory, 'beta_0002.nii'];
 
 %% Create masks and get mean Beta coefficients
 % Read parcellation file 
@@ -43,6 +45,7 @@ for index = 1:n_regions
     
     % output file name 
     output_file = [output_directory, sprintf('mask_region_%d.nii', index)];
+    
     
     % mask condition 
     f = sprintf('i1==%d', index);
