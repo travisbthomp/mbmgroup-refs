@@ -11,5 +11,8 @@ Main/._*.py
 
 #matlab cache
 Main/spm_scripts/._*.m
+Main/spm_Scripts/*.m~
 
+#Data zips
+Data/mni_parcellations/._*
 
