@@ -46,13 +46,14 @@ class Connectome:
         #get tags needed
         self._region_tag = self._find_tag_graphml(tag = 'dn_name')
         self._number_of_fibers_tag = self._find_tag_graphml(tag = 'number_of_fibers')
-
+        self._mean_fiber_length_tag = self._find_tag_graphml(tag= 'fiber_length_mean')
         #initialise graph variables
         self.n_Nodes = 0
         self.node_id = np.zeros((0, 2))
         self.n_edges = 0
         self.adj_matrix_full = np.zeros((0,0))
         self.coordinates = None
+        self.coordinates_path = root_dir + f'/Data/mni_coordinates/mni-parcellation-scale{self.scale}_coordinates.csv'
 
         # Variable for Dataframe
         self.dataframe = None
@@ -87,6 +88,9 @@ class Connectome:
     def get_nodes_graphml(self):
         """Get node id's and region names
         """
+        self.n_Nodes = 0
+        self.node_id = np.zeros((0, 2))
+
         for node in self.__root[-1].iter('{http://graphml.graphdrawing.org/xmlns}node'):
             id_number =  node.attrib['id']
             children = list(node.iter())
@@ -118,14 +122,41 @@ class Connectome:
             self.adj_matrix_full[x-1,y-1] = 1.0 * n_fibers
             self.adj_matrix_full[y-1,x-1] = 1.0 * n_fibers
 
-        #normalise adjacency matrix to highest value
-        #adj_matrix_full = adj_matrix_full / np.amax(adj_matrix_full)
+    def define_weighted_adjacency_matrix_graphml(self):
+        """Define the adjacency matrix based from graphml
+        """
+        #initaialise full adjacency matrix
+        self.adj_matrix_full = np.zeros((self.n_Nodes,self.n_Nodes))
+
+        #populate full adjacency matrix
+        self.n_edges = 0
+        for child in self.__root.iter('{http://graphml.graphdrawing.org/xmlns}edge'):
+            self.n_edges += 1
+            source = child.keys()[0]
+            target = child.keys()[1]
+            x, y = int(child.attrib[source]), int(child.attrib[target])
+            for children in child.iter('{http://graphml.graphdrawing.org/xmlns}data'):
+                #print(children.keys())
+                for keys in children.keys():
+                    if children.attrib[keys] == self._number_of_fibers_tag:
+                        n_fibers = float(children.text)
+                    if children.attrib[keys] == self._mean_fiber_length_tag:
+                        mean_fiber_length = float(children.text)
+            self.adj_matrix_full[x-1,y-1] = n_fibers / np.power(mean_fiber_length,2)
+            self.adj_matrix_full[y-1,x-1] = n_fibers / np.power(mean_fiber_length,2)
+
 
     def get_mni_node_coordinates(self):
         """Retrieve node coordinates in MNI space from MNI parcellated brain
         """
-        image = nib.load(self.parcellated_image_path)
-        self.coordinates = plotting.find_parcellation_cut_coords(image)
+        if os.path.isfile(self.coordinates_path):
+            self.coordinates = pd.read_csv(self.coordinates_path, usecols=['x','y','z'])
+            print(self.coordinates.shape)
+            print(self.n_Nodes)
+        else:
+            image = nib.load(self.parcellated_image_path)
+            self.coordinates = plotting.find_parcellation_cut_coords(image)
+
 
     def _create_dataframe(self):
         """Create dataframe to output regional number and labels, coordinates
@@ -148,3 +179,4 @@ class Connectome:
         """Save dataframe
         """
         self.graphml_data.to_csv(csv_filename)
+        self.csv_filename = csv_filename
