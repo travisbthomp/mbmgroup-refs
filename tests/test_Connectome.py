@@ -83,6 +83,11 @@ class TestConnectome(unittest.TestCase):
         assert self.graph.coordinates.shape[1] == 3
         assert self.graph.coordinates.shape[0] == self.graph.n_Nodes
 
+    def test_relabel_regions(self):
+        """testing function _relabel_regions to check that regions node id's are changed
+        as expected.
+        """
+        self.graph._relabel_regions()
 class TestConnectomeDataframe(unittest.TestCase):
     """Test functions to build and output dataframe file
     """

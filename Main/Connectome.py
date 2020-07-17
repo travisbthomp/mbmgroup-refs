@@ -18,7 +18,7 @@ class Connectome:
         """__init__ to initialise class
 
         Arguments:
-            filename {str} -- full pathname for the graph csv of graphml
+            filename {str} -- full pathname for the graph csv or graphml
         """
         #initalise input variables
         self.filename = filename
@@ -34,6 +34,7 @@ class Connectome:
             else:
                 pass
             self.parcellated_image_path = root_dir + f'/Data/mni_parcellations/mni-parcellation-scale{self.scale}_atlas.nii.gz'
+            self.parcellated_graph_path = root_dir + f'/Data/mni_graphs/mni-parcellation-scale{self.scale}_atlas.graphml'
         else:
             self.parcellated_image_path = parcellated_image_path
 
@@ -84,6 +85,35 @@ class Connectome:
                 if child.attrib['attr.name'] == tag:
                     tag_id = child.attrib['id']
                     return tag_id
+
+    def _relabel_regions(self):
+        """Function to relabel strings into a consisent formatting
+        This function specifically addresses difference in CMTK parcellation labels
+        and labels in the braingraph.org region labels.
+        """
+        regions = self.node_id
+        n_regions = len(regions)
+
+        for i in range(n_regions):
+            region_id = regions[i][1]
+            region_id = region_id.replace('.','-')
+            region_id = region_id.replace('_','-')
+            split_ids = region_id.split('-')
+            if split_ids[-1][-1] == ' ':
+                split_ids[-1] = split_ids[-1][:-1]
+            if split_ids[0] == 'ctx':
+                if len(split_ids) > 3:
+                    regions[i][1] = '-'.join(split_ids[-3:])
+                else:
+                    regions[i][1] = '-'.join(split_ids[-2:])
+            if region_id == "Brain-Stem":
+                regions[i][1] = split_ids[0].lower() + split_ids[1].lower()
+            else:
+                regions[i][1] = '-'.join(split_ids[-3:])
+        self.node_id = regions
+        return regions
+
+
 
     def get_nodes_graphml(self):
         """Get node id's and region names
@@ -136,7 +166,6 @@ class Connectome:
             target = child.keys()[1]
             x, y = int(child.attrib[source]), int(child.attrib[target])
             for children in child.iter('{http://graphml.graphdrawing.org/xmlns}data'):
-                #print(children.keys())
                 for keys in children.keys():
                     if children.attrib[keys] == self._number_of_fibers_tag:
                         n_fibers = float(children.text)
@@ -151,8 +180,6 @@ class Connectome:
         """
         if os.path.isfile(self.coordinates_path):
             self.coordinates = pd.read_csv(self.coordinates_path, usecols=['x','y','z'])
-            print(self.coordinates.shape)
-            print(self.n_Nodes)
         else:
             image = nib.load(self.parcellated_image_path)
             self.coordinates = plotting.find_parcellation_cut_coords(image)
@@ -180,3 +207,4 @@ class Connectome:
         """
         self.graphml_data.to_csv(csv_filename)
         self.csv_filename = csv_filename
+
