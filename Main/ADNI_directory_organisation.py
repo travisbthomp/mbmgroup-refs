@@ -1,3 +1,15 @@
+    """A simple script to reorganise directories dowdnloaded from ADNI. To use
+    the script, simply add the present location of the downloaded directory,
+    the desired target directory and the location of the csv file corresponding
+    to the downlaoded ADNI data. Once done, run the script from terminal or
+    IDE.
+
+    Returns:
+        ADNI subjects organised by subjects, with a directory for each subject
+        containing their nifti images. The subject directories are placed in the
+        target directory.
+    """
+
 import os, fnmatch
 import pandas as pd
 
@@ -50,6 +62,7 @@ def organise_directory(download_dir, subject_csv, target_file_path):
 
         os.rename(image_path, new_image_path)
 
+# User should only edit the following three lines
 download_dir = '/Users/pavanchaggar/Downloads/ADNI-4/'
 subject_csv = '/Users/pavanchaggar/Downloads/AD_PETmatched_MRI_6_16_2020.csv'
 target_file_path = '/Users/pavanchaggar/Documents/AD_PET/AD/MRI/'
