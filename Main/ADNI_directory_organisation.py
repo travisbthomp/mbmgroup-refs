@@ -62,7 +62,7 @@ def organise_directory(download_dir, subject_csv, target_file_path):
 
         os.rename(image_path, new_image_path)
 
-# User should only edit the following three lines
+# User should only edit the following three lines. Ensure paths end will '/'. 
 download_dir = '/Users/pavanchaggar/Downloads/ADNI-4/'
 subject_csv = '/Users/pavanchaggar/Downloads/AD_PETmatched_MRI_6_16_2020.csv'
 target_file_path = '/Users/pavanchaggar/Documents/AD_PET/AD/MRI/'
