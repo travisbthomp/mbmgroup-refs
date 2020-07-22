@@ -12,14 +12,18 @@
 clear all 
 
 %% Create Subject List
-spm_path = '/Volumes/Pavan_SSD/matlab_pkgs/spm12';
+% User will to edit paths here 
+
+spm_path = '/Volumes/Pavan_SSD/matlab_pkgs/spm12'; % USER SPECIFIED
 
 % path to ADNI directory
-data_dir = '/Volumes/Pavan_SSD/Connectome_atrophy/Data/LMCI/';
+data_dir = '/Volumes/Pavan_SSD/Connectome_atrophy/Data/LMCI/'; % USER SPECIFIED
 
 % load group csv data
-group_csv_paths = {'LMCI/MRI/LMCI_MRImatched_ABTAUPET_6_14_2020.csv',
-                   'CN/MRI/CN_PETmatched_MRI_6_14_2020.csv'};
+group_csv_paths = {'LMCI/MRI/LMCI_MRImatched_ABTAUPET_6_14_2020.csv', % USER SPECIFIED
+                   'CN/MRI/CN_PETmatched_MRI_6_14_2020.csv'}; % USER SPECIFIED
+               
+               
 subjects_table = [];
 for i = 1:length(group_csv_paths)
     group = readtable(strcat(data_dir, group_csv_paths{i}));
@@ -33,7 +37,8 @@ subject_groups = subjects_table.('Group');
 
 subject_modality = subjects_table.('Modality');
 
-% list containing paths to subject nii images
+% list containing paths to subject nii images. These may need to be edited
+% depending on path specification.
 rc1 = strcat(data_dir, subject_groups, '/', subject_modality, '/', subject_groups, '_', subject_ids, '/rc1', subject_ids, '.nii');
 rc2 = strcat(data_dir, subject_groups, '/', subject_modality, '/', subject_groups, '_', subject_ids, '/rc2', subject_ids, '.nii');
 

@@ -16,13 +16,15 @@
 clear all 
 
 %% Create Subject List
-spm_path = '/Volumes/Pavan_SSD/matlab_pkgs/spm12';
+% User will need to edit paths in this section
+
+spm_path = '/Volumes/Pavan_SSD/matlab_pkgs/spm12'; % USER SPECIFIED
 
 % path to ADNI directory
-data_dir = '/Volumes/Pavan_SSD/Connectome_atrophy/Data/LMCI/';
+data_dir = '/Volumes/Pavan_SSD/Connectome_atrophy/Data/LMCI/'; % USER SPECIFIED
 
 % path to ADNI csv file containing subject information
-subjects_csv_path = strcat(data_dir, 'LMCI/MRI/LMCI_MRImatched_ABTAUPET_6_14_2020.csv');
+subjects_csv_path = strcat(data_dir, 'LMCI/MRI/LMCI_MRImatched_ABTAUPET_6_14_2020.csv'); % USER SPECIFIED
 subjects_table = readtable(subjects_csv_path);
 
 

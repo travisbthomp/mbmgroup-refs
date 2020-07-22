@@ -13,14 +13,16 @@
 clear all 
 
 %% Create Subject List
-spm_path = '/Volumes/Pavan_SSD/matlab_pkgs/spm12';
+% User will need to specify paths here 
+
+spm_path = '/Volumes/Pavan_SSD/matlab_pkgs/spm12'; % USER SPECIFIED
 
 % path to ADNI directory
-data_dir = '/Volumes/Pavan_SSD/Connectome_atrophy/Data/LMCI/';
-
+data_dir = '/Volumes/Pavan_SSD/Connectome_atrophy/Data/LMCI/'; % USER SPECIFIED
+ 
 % load group csv data
-group_csv_paths = {'CN/MRI/CN_PETmatched_MRI_6_14_2020.csv',
-                   'LMCI/MRI/LMCI_MRImatched_ABTAUPET_6_14_2020.csv'
+group_csv_paths = {'CN/MRI/CN_PETmatched_MRI_6_14_2020.csv', % USER SPECIFIED
+                   'LMCI/MRI/LMCI_MRImatched_ABTAUPET_6_14_2020.csv' % USER SPECIFIED
                    };
 subjects_table = [];
 for i = 1:length(group_csv_paths)
@@ -35,6 +37,7 @@ subject_groups = subjects_table.('Group');
 subject_modality = subjects_table.('Modality');
 
 % list containing paths to subject nii images
+% user may need to change path compsotion depending on path structure. 
 c1 = strcat(data_dir, subject_groups, '/', subject_modality, '/', subject_groups, '_', subject_ids, '/c1', subject_ids, '.nii');
 
 flow_fields = strcat(data_dir, subject_groups, '/', subject_modality, '/', subject_groups, '_', subject_ids, '/u_rc1', subject_ids, '_Template.nii');
