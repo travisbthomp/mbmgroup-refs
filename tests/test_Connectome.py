@@ -121,7 +121,7 @@ class TestConnectomeDataframe(unittest.TestCase):
         """testing function to add columns to dataframe
         """
         self.graph._create_dataframe()
-        self.graph._add_to_dataframe('Atrophy Score', self.atrophy_scores)
+        self.graph.add_to_dataframe('Atrophy Score', self.atrophy_scores)
 
         assert self.graph.graphml_data.shape == (self.graph.n_Nodes, len(self.graph._base_columns) + 1)
 
@@ -129,7 +129,7 @@ class TestConnectomeDataframe(unittest.TestCase):
         """test save dataframe function
         """
         self.graph._create_dataframe()
-        self.graph._add_to_dataframe('Atrophy Score', self.atrophy_scores)
+        self.graph.add_to_dataframe('Atrophy Score', self.atrophy_scores)
 
         filename = self.root_dir + '/tests/csv_output.csv'
 

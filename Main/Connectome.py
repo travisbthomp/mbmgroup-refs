@@ -197,7 +197,7 @@ class Connectome:
         #create coords
         self.graphml_data = pd.DataFrame(data, index=range(self.n_Nodes), columns=self._base_columns)
 
-    def _add_to_dataframe(self, column_name:str, input_data):
+    def add_to_dataframe(self, column_name:str, input_data):
         """Append columns to dataframe
         """
         self.graphml_data[column_name] = input_data
