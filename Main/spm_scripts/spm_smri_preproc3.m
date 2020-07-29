@@ -18,11 +18,10 @@ clear all
 spm_path = '/Volumes/Pavan_SSD/matlab_pkgs/spm12'; % USER SPECIFIED
 
 % path to ADNI directory
-data_dir = '/Volumes/Pavan_SSD/Connectome_atrophy/Data/LMCI/'; % USER SPECIFIED
+data_dir = '/Volumes/Pavan_SSD/Connectome_atrophy/Data/AD/AD/tauPET/'; % USER SPECIFIED
  
 % load group csv data
-group_csv_paths = {'CN/MRI/CN_PETmatched_MRI_6_14_2020.csv', % USER SPECIFIED
-                   'LMCI/MRI/LMCI_MRImatched_ABTAUPET_6_14_2020.csv' % USER SPECIFIED
+group_csv_paths = {'AD_MRImatched_tauPET_6_16_2020.csv' % USER SPECIFIED
                    };
 subjects_table = [];
 for i = 1:length(group_csv_paths)
@@ -38,11 +37,11 @@ subject_modality = subjects_table.('Modality');
 
 % list containing paths to subject nii images
 % user may need to change path compsotion depending on path structure. 
-c1 = strcat(data_dir, subject_groups, '/', subject_modality, '/', subject_groups, '_', subject_ids, '/c1', subject_ids, '.nii');
+c1 = strcat(data_dir, subject_groups, '_', subject_ids, '/', subject_ids, '.nii');
 
-flow_fields = strcat(data_dir, subject_groups, '/', subject_modality, '/', subject_groups, '_', subject_ids, '/u_rc1', subject_ids, '_Template.nii');
+flow_fields = strcat(data_dir, 'MRI', '_', subject_ids, '/u_rc1', subject_ids, '_Template.nii');
 
-DARTEL_template = strcat(data_dir, subject_groups(1), '/', subject_modality(1), '/', subject_groups(1), '_', subject_ids(1), '/Template_6.nii');
+DARTEL_template = strcat(data_dir,  subject_groups(1), '_', subject_ids(1), '/Template_6.nii');
 
 %% SPM Batch Processing
 
